@@ -14,6 +14,7 @@
 # ==============================================================================
 
 import gym
+from gym.wrappers import Monitor
 
 from tensorforce import TensorforceError
 from tensorforce.environments import Environment
@@ -46,7 +47,7 @@ class OpenAIGym(Environment):
                 video_callable = False
             else:
                 video_callable = (lambda x: x % monitor_video == 0)
-            self.gym = gym.wrappers.Monitor(self.gym, monitor, force=not monitor_safe, video_callable=video_callable)
+            self.gym = Monitor(self.gym, monitor, force=not monitor_safe, video_callable=video_callable)
 
         self.states_spec = OpenAIGym.specs_from_gym_space(
             space=self.gym.observation_space, ignore_value_bounds=True
@@ -69,7 +70,7 @@ class OpenAIGym(Environment):
         self.gym = None
 
     def reset(self):
-        if isinstance(self.gym, gym.wrappers.Monitor):
+        if isinstance(self.gym, Monitor):
             self.gym.stats_recorder.done = True
         states = self.gym.reset()
         return OpenAIGym.flatten_state(state=states)
