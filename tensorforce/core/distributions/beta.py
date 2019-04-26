@@ -90,8 +90,13 @@ class Beta(Distribution):
 
         sampled = beta_sample / tf.maximum(x=(alpha_sample + beta_sample), y=util.epsilon)
 
-        return self.min_value + (self.max_value - self.min_value) * \
-            tf.where(condition=deterministic, x=definite, y=sampled)
+        norm = self.min_value + (self.max_value - self.min_value)
+
+        sampled_output = sampled * norm
+
+        definite_output = tf.identity(definite * norm, name="motor_output")
+
+        return tf.where(condition=deterministic, x=definite_output, y=sampled_output)
 
     def tf_log_probability(self, distr_params, action):
         alpha, beta, _, log_norm = distr_params
