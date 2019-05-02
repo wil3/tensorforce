@@ -621,7 +621,7 @@ class Model(object):
             var_list=global_variables,  # should be given?
             reshape=False,
             sharded=False,
-            max_to_keep=5,
+            max_to_keep=100,
             keep_checkpoint_every_n_hours=10000.0,
             name=None,
             restore_sequentially=False,
